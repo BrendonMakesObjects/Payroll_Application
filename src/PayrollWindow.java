@@ -192,20 +192,22 @@ class PayrollWindow extends JFrame
     {
         public void actionPerformed(ActionEvent voladd)
         {
+            
+            /*
             String vFName = JOptionPane.showInputDialog(null,"Enter Volunteer's First Name.");
             String vLName = JOptionPane.showInputDialog(null, "Enter Volunteer's Last Name.");
             int hours = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Hours Completed by Volunteer."));
-            
+            *
             Employee newVolntr = new Employee(vFName, vLName, hours);
             employees.add(rowCounter, newVolntr);
-            
+            /* *
             ListTable.setValueAt(vFName, (rowCounter+1) ,0);
             ListTable.setValueAt(vLName, (rowCounter+1) ,1);
             ListTable.setValueAt("N/A", (rowCounter+1) ,2);
             ListTable.setValueAt("Volunteer", (rowCounter+1) ,3);
             ListTable.setValueAt("N/A", (rowCounter+1) ,4);
             ListTable.setValueAt(Integer.toString(hours), (rowCounter+1) ,5);
-            
+            /**/
             rowCounter += 1;
         }
     }

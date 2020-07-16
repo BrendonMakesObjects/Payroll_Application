@@ -9,6 +9,6 @@ class Payroll
 {
     public static void main(String[] args)
     {
-        new PayrollWindow("PayRoll Tracker", 480, 560);
+        new PayrollWindow("PayRoll Tracker", 480, 720);
     }
 }
