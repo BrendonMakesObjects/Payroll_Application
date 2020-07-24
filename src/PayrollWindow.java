@@ -20,6 +20,8 @@ class PayrollWindow extends JFrame
     
     private     Volunteer   voluntr =   null;
     
+    private     Form        form    =   null;
+    
     private     JPanel      centerPanel = null;
     
     private     JTable      ListTable   =   null;
@@ -39,6 +41,8 @@ class PayrollWindow extends JFrame
     private JMenuItem   Export_CSV  =   null;
     
     private JMenuItem   Open_File   =   null;
+    
+    private JMenuItem   Add_w_Form  =   null;
     
     private JMenuItem   Exit_App    =   null;
     
@@ -135,7 +139,9 @@ class PayrollWindow extends JFrame
         Edit = new JMenu("Edit");
         Edit.add(addEmployee);
         Edit.add(addVoluntr);
+        Edit.add(Add_w_Form);
         menuBar.add(Edit);
+        
         
         Help = new JMenu("Help");
         Help.add(Exit_App);
@@ -150,6 +156,9 @@ class PayrollWindow extends JFrame
         addVoluntr = new JMenuItem("Add Volunteer to list");
         addVoluntr.addActionListener(new VolunteerAddition());
         
+        Add_w_Form = new JMenuItem("Add");
+        Add_w_Form.addActionListener(new AddWithForm());
+        
         Export_CSV = new JMenuItem("Export as CSV");
         Export_CSV.addActionListener(new Export_To_CSV());
                 
@@ -161,8 +170,16 @@ class PayrollWindow extends JFrame
     {
         employees = new ArrayList<Employee>();
     }
-    
-    
+    /**
+    *This method will allow user to add a full row of data with a single form.
+    **/
+    private class AddWithForm implements ActionListener
+    {
+        public void actionPerformed(ActionEvent awf)
+        {
+            form = new Form(300, 300);
+        }
+    }
     private class EmployeeAddition implements ActionListener
     {
         public void actionPerformed(ActionEvent empadd)

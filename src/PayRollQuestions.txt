@@ -1,0 +1,6 @@
+Enter First Name:
+Enter Last Name:
+Enter Employee ID:
+Enter Employee Type:
+Enter PayRate:
+Enter Hour Completed:
