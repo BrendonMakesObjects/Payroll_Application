@@ -178,6 +178,14 @@ class PayrollWindow extends JFrame
         public void actionPerformed(ActionEvent awf)
         {
             form = new Form(300, 300);
+            /**
+            ListTable.setValueAt( Form.getFirstName(), (rowCounter+1), 0);
+            ListTable.setValueAt( Form.getLastName(), (rowCounter+1), 1);
+            ListTable.setValueAt( Form.getEmployeeID(), (rowCounter+1), 2);
+            ListTable.setValueAt( Form.getEmployeeType(), (rowCounter+1), 3);
+            ListTable.setValueAt( Double.toString(Form.getPay()), (rowCounter+1), 4);
+            ListTable.setValueAt( Double.toString(Form.getTime()) , (rowCounter+1), 5);
+            */
         }
     }
     private class EmployeeAddition implements ActionListener

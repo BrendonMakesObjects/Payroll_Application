@@ -11,6 +11,9 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 /**
 *This will be a general form class that will be used to retrieve data from a user in an organized fashion
 *The data will be returned to the main program and the form will have served it's purpose
@@ -23,11 +26,17 @@ class Form extends JFrame
     
     private     JPanel      content[]           =   null;
     
+    private     JPanel      buttons             =   null;
+    
     private     JLabel      labels[]            =   null;
     
     private     JTextArea   responses[]         =   null;
     
     private     String      questions[]         =   null;
+    
+    private     String      answers[]           =   null;
+    
+    private     JButton     save                =   null;
     
     private     int         prompts             =   0;
     /**End Fields**/
@@ -40,15 +49,16 @@ class Form extends JFrame
         {
             setQuestions(10);
             
-            setPrompts(prompts);
-            
             setTitle("Form");
             
             setSize(width, height);
             //ADD THE FUCKING PANELS WITH THE JLABELS AND JTEXTAREAS YOU FUCK!!!
-            createPanels();
+            setPrompts(prompts);
             createLabels();
             createTextAreas();
+            createButtons();
+            createPanels();
+            //JOptionPane.showMessageDialog(null, toString());
             //
             
         }
@@ -58,6 +68,7 @@ class Form extends JFrame
         }
         finally
         {
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             /**
             *Code from 
             *https://stackoverflow.com/questions/2442599/how-to-set-jframe-to-appear-centered-regardless-of-monitor-resolution
@@ -71,6 +82,14 @@ class Form extends JFrame
     /**End Constructors**/
     /**Start Methods**/
     //Setters
+    private void setAnswers()
+    {
+        answers = new String[getPrompts()];
+        for(int i = 0; i < getPrompts(); i++)
+        {
+            answers[i] = responses[i].getText();
+        }
+    }
     private void setPrompts(int prompts)
     {
         this.prompts = prompts;
@@ -84,13 +103,16 @@ class Form extends JFrame
             questions = new String[size];
             File file = new File("PayRollQuestions.txt");
             Scanner scan = new Scanner(file);
-            for(int i=0;scan.hasNext();i++)
+            for(int i = 0; scan.hasNext(); i++)
             {
                 questions[i] = scan.nextLine();
-                p = i;
+                p = i + 1;
             }
             scan.close();
+            
             setPrompts(p);
+            
+            //JOptionPane.showMessageDialog(null, "Number of prompts added:"+getPrompts());
         }
         catch(IOException ioe)
         {
@@ -106,6 +128,15 @@ class Form extends JFrame
     {
         return prompts;
     }
+    /*
+    private String getFirstName(){ return f_name; }
+    private String getLastName(){ return l_name; }
+    private String getEmployeeID(){ return emp_id; }
+    private String getEmployeeType(){ return emp_type; }
+    private String getPay(){ return pay; }
+    private String getTime(){ return time; }
+    */
+    private String[] getAnswers(){ return answers; }
     /*****/
     private void createPanels()
     {
@@ -116,14 +147,20 @@ class Form extends JFrame
         for(int i = 0; i < getPrompts(); i++)
         {
             content[i] = new JPanel();
+            content[i].add(labels[i]);
+            content[i].add(responses[i]);
+            mainPanel.add(content[i]);
         }
+        buttonPanel();
+        mainPanel.add(buttons);
+        add(mainPanel);
         //add labels and text areas to content then add content to main
     }
     /************/
     private void createLabels()
     {
         labels = new JLabel[getPrompts()];
-        for(int i = 0; i < getPrompts(); i++)
+        for(int i = 0; i < labels.length; i++)
         {
             labels[i] = new JLabel(questions[i]);
         }
@@ -132,11 +169,48 @@ class Form extends JFrame
     private void createTextAreas()
     {
         responses = new JTextArea[getPrompts()];
+        for(int i = 0; i < responses.length; i++)
+        {
+            responses[i] = new JTextArea();
+            responses[i].setLineWrap(true);
+        }
+    }
+    private void createButtons()
+    {
+        save = new JButton("Save");
+        
+        save.addActionListener( new SaveButtonListener());
+    }
+    private void buttonPanel()
+    {
+        buttons = new JPanel();
+        
+        buttons.add(save);
     }
     //toString method
-    public String toString(){return null;}
+    public String toString()
+    {
+        String acclimatedString = "";
+        for(int i = 0; i < questions.length; i++)
+        {
+            acclimatedString += "\n"+questions[i]+"\n";
+        }
+        return acclimatedString;
+    }
     /*
     *End Methods
     */
+    /**
+    *Functionality for save button
+    **/
+    private class SaveButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent sa)
+        {
+            //Figure out how to move content added to form to main program
+            setAnswers();
+            dispose();
+        }
+    }
 }
 /***Fin***/
