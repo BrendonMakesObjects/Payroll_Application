@@ -36,7 +36,7 @@ class Form extends JFrame
     
     private     String      answers[]           =   null;
     
-    private     JButton     save                =   null;
+    protected   JButton     save                =   null;
     
     private     int         prompts             =   0;
     /**End Fields**/
@@ -82,7 +82,7 @@ class Form extends JFrame
     /**End Constructors**/
     /**Start Methods**/
     //Setters
-    private void setAnswers()
+    protected void setAnswers()
     {
         answers = new String[getPrompts()];
         for(int i = 0; i < getPrompts(); i++)
@@ -120,23 +120,22 @@ class Form extends JFrame
         }
     }
     //Getters
-    /*private int getQuestions()
-    {
-        return questions.length;
-    }*/
     private int getPrompts()
     {
         return prompts;
     }
-    /*
-    private String getFirstName(){ return f_name; }
-    private String getLastName(){ return l_name; }
-    private String getEmployeeID(){ return emp_id; }
-    private String getEmployeeType(){ return emp_type; }
-    private String getPay(){ return pay; }
-    private String getTime(){ return time; }
-    */
-    private String[] getAnswers(){ return answers; }
+    /**
+    *This function will allow the given answers to be passed on the calling event
+    *   that started this whole damn window in the first god damn place. 
+    **/
+    protected void clearTextAreas()
+    {
+        for(int i = 0; i < getPrompts(); i++)
+        {
+            responses[i].setText("");
+        }
+    }
+    protected String[] getAnswers(){ return answers; }
     /*****/
     private void createPanels()
     {
@@ -173,13 +172,14 @@ class Form extends JFrame
         {
             responses[i] = new JTextArea();
             responses[i].setLineWrap(true);
+            responses[i].setColumns(1);
+            responses[i].setRows(1);
+            responses[i].setTabSize(0);
         }
     }
     private void createButtons()
     {
         save = new JButton("Save");
-        
-        save.addActionListener( new SaveButtonListener());
     }
     private void buttonPanel()
     {
@@ -200,17 +200,5 @@ class Form extends JFrame
     /*
     *End Methods
     */
-    /**
-    *Functionality for save button
-    **/
-    private class SaveButtonListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent sa)
-        {
-            //Figure out how to move content added to form to main program
-            setAnswers();
-            dispose();
-        }
-    }
 }
 /***Fin***/

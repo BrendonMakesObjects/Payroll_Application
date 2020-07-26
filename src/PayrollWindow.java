@@ -12,13 +12,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import java.util.Scanner;
-import java.io.*;
-
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.IOException;
+/**
+*This application has been modified from the original version to make presentable.
+**/
 class PayrollWindow extends JFrame
 {
+    /**Fields**/
     private     Employee    emp     =   null;
-    
-    private     Volunteer   voluntr =   null;
     
     private     Form        form    =   null;
     
@@ -31,13 +34,9 @@ class PayrollWindow extends JFrame
     private JMenu   File    =   null;
     
     private JMenu   Edit    =   null;
-        
+    
     private JMenu   Help    =   null;
 
-    private JMenuItem   addEmployee =   null;
-    
-    private JMenuItem   addVoluntr  =   null;
-    
     private JMenuItem   Export_CSV  =   null;
     
     private JMenuItem   Open_File   =   null;
@@ -47,10 +46,9 @@ class PayrollWindow extends JFrame
     private JMenuItem   Exit_App    =   null;
     
     private ArrayList<Employee>    employees   =   null;
-        
+    
     private int rowCounter =    0;
-    
-    
+    /**Constructors**/
     PayrollWindow(){ }
     
     PayrollWindow(String title, int height, int width)
@@ -104,32 +102,34 @@ class PayrollWindow extends JFrame
 
 
             setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            
             /**
             *Code from 
             *https://stackoverflow.com/questions/2442599/how-to-set-jframe-to-appear-centered-regardless-of-monitor-resolution
             **/
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+            form = new Form(300, 300);
+            form.save.addActionListener(new SaveButtonListener());
+            form.setVisible(false);
             /**
             *End of used code
             ***/
         }
     }
-    
+    //
     void createCenterPanel()
     {
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
     }
-    
+    //
     void createTable()
     {
         ListTable = new JTable(25, 6);
         ListTable.setEnabled(false); 
         centerPanel.add(ListTable, BorderLayout.CENTER);
     }
-    
+    //
     void createJMenu()
     {
         File = new JMenu("File");
@@ -137,25 +137,16 @@ class PayrollWindow extends JFrame
         menuBar.add(File);
         
         Edit = new JMenu("Edit");
-        Edit.add(addEmployee);
-        Edit.add(addVoluntr);
         Edit.add(Add_w_Form);
         menuBar.add(Edit);
-        
         
         Help = new JMenu("Help");
         Help.add(Exit_App);
         menuBar.add(Help);
     }
-    
+    //
     void createJMenuItems()
-    {
-        addEmployee = new JMenuItem("Add Employee to list");
-        addEmployee.addActionListener(new EmployeeAddition());
-        
-        addVoluntr = new JMenuItem("Add Volunteer to list");
-        addVoluntr.addActionListener(new VolunteerAddition());
-        
+    {        
         Add_w_Form = new JMenuItem("Add");
         Add_w_Form.addActionListener(new AddWithForm());
         
@@ -165,7 +156,7 @@ class PayrollWindow extends JFrame
         Exit_App = new JMenuItem("Exit Application");
         Exit_App.addActionListener(new Exit_Application());
     }
-    
+    //
     void createEmployeeList()
     {
         employees = new ArrayList<Employee>();
@@ -177,65 +168,34 @@ class PayrollWindow extends JFrame
     {
         public void actionPerformed(ActionEvent awf)
         {
-            form = new Form(300, 300);
-            /**
-            ListTable.setValueAt( Form.getFirstName(), (rowCounter+1), 0);
-            ListTable.setValueAt( Form.getLastName(), (rowCounter+1), 1);
-            ListTable.setValueAt( Form.getEmployeeID(), (rowCounter+1), 2);
-            ListTable.setValueAt( Form.getEmployeeType(), (rowCounter+1), 3);
-            ListTable.setValueAt( Double.toString(Form.getPay()), (rowCounter+1), 4);
-            ListTable.setValueAt( Double.toString(Form.getTime()) , (rowCounter+1), 5);
-            */
+            form.setVisible(true);
+            form.clearTextAreas();
         }
     }
-    private class EmployeeAddition implements ActionListener
+    /***Functionality for save button from form class**/
+    private class SaveButtonListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent empadd)
+        public void actionPerformed(ActionEvent sa)
         {
-            String eFName= JOptionPane.showInputDialog(null, "Enter Employee's First Name.");
-            String eLName= JOptionPane.showInputDialog(null, "Enter Employee's Last Name.");
-            String eId= JOptionPane.showInputDialog(null, "Enter Employee's ID");
-            String eType = JOptionPane.showInputDialog(null, "Enter Employee's Status (Full or Part time)");
-            double pay = Double.parseDouble(JOptionPane.showInputDialog(null,"Enter Employee Payrate by hour"));
-            double time = Double.parseDouble(JOptionPane.showInputDialog(null,"Enter Hours Completed by Employee for the week"));
-            
-            Employee newEmp = new Employee(eFName, eLName, eId, pay, time);
-            employees.add(rowCounter, newEmp);
-            
-            ListTable.setValueAt( eFName , (rowCounter+1) , 0);
-            ListTable.setValueAt( eLName , (rowCounter+1) , 1);
-            ListTable.setValueAt( eId , (rowCounter+1) , 2);
-            ListTable.setValueAt( eType, (rowCounter+1) , 3);
-            ListTable.setValueAt( Double.toString(pay)+"/hr" , (rowCounter+1) , 4);
-            ListTable.setValueAt( Double.toString(time) , (rowCounter+1) , 5);
-            
+            form.setAnswers();
+            //The following code does not work, must find a way to add values to list after save button is clicked
+            String values[] = form.getAnswers();
+            for( int  i = 0; i < 6; i++)
+            {
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+                ListTable.setValueAt( values[i] , (rowCounter+1), i);
+            }
+            form.dispose();
             rowCounter += 1;
         }
     }
-    
-    private class VolunteerAddition implements ActionListener
-    {
-        public void actionPerformed(ActionEvent voladd)
-        {
-            
-            /*
-            String vFName = JOptionPane.showInputDialog(null,"Enter Volunteer's First Name.");
-            String vLName = JOptionPane.showInputDialog(null, "Enter Volunteer's Last Name.");
-            int hours = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Hours Completed by Volunteer."));
-            *
-            Employee newVolntr = new Employee(vFName, vLName, hours);
-            employees.add(rowCounter, newVolntr);
-            /* *
-            ListTable.setValueAt(vFName, (rowCounter+1) ,0);
-            ListTable.setValueAt(vLName, (rowCounter+1) ,1);
-            ListTable.setValueAt("N/A", (rowCounter+1) ,2);
-            ListTable.setValueAt("Volunteer", (rowCounter+1) ,3);
-            ListTable.setValueAt("N/A", (rowCounter+1) ,4);
-            ListTable.setValueAt(Integer.toString(hours), (rowCounter+1) ,5);
-            /**/
-            rowCounter += 1;
-        }
-    }
+    /**
+    *This inner class allows the user to export data entered into list to a CSV file.
+    **/
     private class Export_To_CSV implements ActionListener
     {
         public void actionPerformed(ActionEvent etc)
@@ -275,7 +235,7 @@ class PayrollWindow extends JFrame
             }
         }
     }
-        
+    //
     private class Exit_Application implements ActionListener
     {
         public void actionPerformed(ActionEvent ea)
@@ -290,6 +250,5 @@ class PayrollWindow extends JFrame
             }
         }
     }
-    
-    
 }
+/****Fin*****/
