@@ -83,7 +83,7 @@ class PayrollWindow extends JFrame
             setJMenuBar(menuBar);
             //menuBar.setVisible(true);
             
-            setVisible(true);
+            
             
             setResizable(false);
             
@@ -114,6 +114,8 @@ class PayrollWindow extends JFrame
             /**
             *End of used code
             ***/
+
+            setVisible(true);
         }
     }
     //
